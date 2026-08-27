@@ -3,6 +3,7 @@
 let mediaRecorder;
 let chunks = [];
 let isRecording = false;
+let stream;
 
 // grab the button from index
 const recordButton = document.getElementById('record-btn');
@@ -11,7 +12,7 @@ async function startRecording(){
 	try { 
 		chunks = [];
 		
-		const stream = await navigator.mediaDevices.getUserMedia({ audio: true});
+		stream = await navigator.mediaDevices.getUserMedia({ audio: true});
 		
 		mediaRecorder = new MediaRecorder(stream);
 		
@@ -36,6 +37,9 @@ async function startRecording(){
 
 function stopRecording(){
 	mediaRecorder.stop();
+	stream.getTracks().forEach((track) => {
+		track.stop();
+	});
 	isRecording = false;
 	recordButton.textContent = 'Record';
 }
