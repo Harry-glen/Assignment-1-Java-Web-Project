@@ -20,11 +20,21 @@ async function startRecording(){
 			chunks.push(event.data);
 		});
 		
-		mediaRecorder.addEventListener('stop', () => {
+		mediaRecorder.addEventListener('stop', async () => {
 			// Chrome's default capture format, the transcription API needs to be told this later
 			const audioBlob = new Blob(chunks, { type: 'audio/webm' });
+			
+			const formData = new FormData();
+			formData.append('file', audioBlob);
+			
+			const response = await fetch('/api/v1/transcribe', {
+			  	method: 'POST',
+			  	body: formData
+			});
+			
 			// for testing
 			console.log('audioBlob', audioBlob);
+			console.log('Server responded:', response.status)
 		});
 		
 		mediaRecorder.start();
