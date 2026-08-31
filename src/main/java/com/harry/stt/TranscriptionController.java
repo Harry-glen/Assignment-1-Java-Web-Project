@@ -18,12 +18,16 @@ public class TranscriptionController {
 
     @Value("${stt.api.key}")
     private String sttApiKey;
-
-
+    
+    private final TranscriptionService transcriptionService;
+    public TranscriptionController(TranscriptionService transcriptionService) {
+        this.transcriptionService = transcriptionService;
+    }
+    
     @PostMapping("/api/v1/transcribe")
     public String transcribe(@RequestParam("file") MultipartFile audio) {
     	log.info("STT API URL is {}", sttApiUrl);
-    	long audioSize = audio.getSize();
-    	return "Received audio: " + audioSize + " bytes";
+        return transcriptionService.transcribe(audio);
+
     }
 }
