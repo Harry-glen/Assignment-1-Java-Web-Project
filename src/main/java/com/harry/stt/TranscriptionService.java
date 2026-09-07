@@ -13,6 +13,9 @@ public class TranscriptionService {
 	@Value("${stt.api.url}")
 	private String sttApiUrl;
 	
+	@Value("${stt.api.key}")
+	private String sttApiKey;
+	
 	// Send audio to configured STT service and return response
 	// URL comes from config (stt.api.url), this points at local stub
 	// during development and the real OpenAI endpoint on TITAN same code, both
@@ -27,6 +30,7 @@ public class TranscriptionService {
 		
 		String response = restClient.post()
 				.uri(sttApiUrl)
+				.header("Authorization", "Bearer " + sttApiKey)
 				.contentType(MediaType.MULTIPART_FORM_DATA)
 				.body(body)
 				.retrieve()
