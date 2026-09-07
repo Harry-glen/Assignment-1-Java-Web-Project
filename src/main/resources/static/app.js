@@ -42,6 +42,7 @@ async function startRecording(){
 		
 		mediaRecorder.start();
 		isRecording = true;
+		recordButton.classList.add('recording');
 		recordButton.textContent = 'Stop';
 	} catch (err) {
 		console.error('Microphone access failed:', err);
@@ -54,6 +55,7 @@ function stopRecording(){
 		track.stop();
 	});
 	isRecording = false;
+	recordButton.classList.remove('recording');
 	recordButton.textContent = 'Record';
 }
 

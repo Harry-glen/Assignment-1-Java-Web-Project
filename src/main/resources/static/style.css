@@ -1,0 +1,31 @@
+:root {
+    --bg: #0d1117;        /* page background — near black */
+    --surface: #161b22;   /* cards / raised areas — slightly lighter */
+    --text: #e6edf3;      /* main text — off-white, softer than pure white */
+    --muted: #8b949e;     /* secondary text — grey */
+    --accent: #2f81f7;    /* the one bright colour — swap for cyan/green if you like */
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: system-ui, sans-serif;
+    max-width: 600px;
+    margin: 40px auto;      /* centers the content horizontally */
+    padding: 0 20px;
+    line-height: 1.6;
+}
+
+#record-btn {
+	background-color: var(--accent);
+	border: none;
+	padding: 12px 24px;
+	border-radius: 6px;
+	cursor: pointer;
+	font-size: medium;
+	font-weight: 600;
+}
+
+#record-btn.recording {
+	background-color: #da3633;
+}
