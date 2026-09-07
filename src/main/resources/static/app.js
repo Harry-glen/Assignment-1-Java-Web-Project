@@ -32,6 +32,9 @@ async function startRecording(){
 			  	body: formData
 			});
 			
+			const transcript = await response.text();
+			document.getElementById('transcript').textContent = transcript;
+			
 			// for testing
 			console.log('audioBlob', audioBlob);
 			console.log('Server responded:', response.status)
