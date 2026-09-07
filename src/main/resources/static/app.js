@@ -33,7 +33,9 @@ async function startRecording(){
 			});
 			
 			const transcript = await response.text();
-			document.getElementById('transcript').textContent = transcript;
+			const transcriptEl = document.getElementById('transcript');
+			transcriptEl.classList.remove('placeholder');
+			transcriptEl.textContent = transcript;
 			
 			// for testing
 			console.log('audioBlob', audioBlob);

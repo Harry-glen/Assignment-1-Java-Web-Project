@@ -29,3 +29,17 @@ body {
 #record-btn.recording {
 	background-color: #da3633;
 }
+
+#transcript {
+	background-color: var(--surface);
+	padding: 16px 20px;
+	border-radius: 6px;
+	min-height: 60px;
+	margin-top: 20px;
+	border: 1px solid var(--muted);
+}
+
+#transcript.placeholder {
+    font-style: italic;
+    color: var(--muted);
+}
