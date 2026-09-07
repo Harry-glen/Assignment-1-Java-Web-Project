@@ -28,14 +28,14 @@ public class TranscriptionService {
 	    
 		RestClient restClient = RestClient.create();
 		
-		String response = restClient.post()
+		TranscriptionResponse response = restClient.post()
 				.uri(sttApiUrl)
 				.header("Authorization", "Bearer " + sttApiKey)
 				.contentType(MediaType.MULTIPART_FORM_DATA)
 				.body(body)
 				.retrieve()
-				.body(String.class);
-		return response;
+				.body(TranscriptionResponse.class);
+		return response.text();
 
 	}
 }
