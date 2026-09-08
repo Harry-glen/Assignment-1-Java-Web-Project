@@ -14,4 +14,4 @@ public class StubSttController {
     public Map<String, String> fakeTranscription() {
         return Map.of("text", "this is a fake transcription");
     }
-}
+};

@@ -28,6 +28,7 @@ async function startRecording(){
 			formData.append('file', audioBlob);
 			
 			const transcriptEl = document.getElementById('transcript');
+			transcriptEl.textContent = 'Transcribing…';   
 			
 			try {
 				const response = await fetch('/api/v1/transcribe', {
@@ -49,7 +50,7 @@ async function startRecording(){
 			// as opposed to the server replying with an error above	
 			} catch (err) {
 				console.error('Transcription request failed:', err);
-				transcriptEl.textContent = 'Could not reach the server — please try again.';
+				transcriptEl.textContent = 'Could not reach the server, please try again.';
 			}
 		});
 		
