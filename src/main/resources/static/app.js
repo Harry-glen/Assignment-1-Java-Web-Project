@@ -27,19 +27,30 @@ async function startRecording(){
 			const formData = new FormData();
 			formData.append('file', audioBlob);
 			
-			const response = await fetch('/api/v1/transcribe', {
-			  	method: 'POST',
-			  	body: formData
-			});
-			
-			const transcript = await response.text();
 			const transcriptEl = document.getElementById('transcript');
-			transcriptEl.classList.remove('placeholder');
-			transcriptEl.textContent = transcript;
 			
-			// for testing
-			console.log('audioBlob', audioBlob);
-			console.log('Server responded:', response.status)
+			try {
+				const response = await fetch('/api/v1/transcribe', {
+				  	method: 'POST',
+				  	body: formData
+				});
+				
+				// fetch only throws on network failure, not on error status codes
+				if (!response.ok) {
+					transcriptEl.textContent = 'Something went wrong, please try again.'
+					return;
+				}
+				
+				const transcript = await response.text();
+				transcriptEl.classList.remove('placeholder');
+				transcriptEl.textContent = transcript;
+				
+			// this catches the request never completing (no network, server unreachable),
+			// as opposed to the server replying with an error above	
+			} catch (err) {
+				console.error('Transcription request failed:', err);
+				transcriptEl.textContent = 'Could not reach the server — please try again.';
+			}
 		});
 		
 		mediaRecorder.start();
