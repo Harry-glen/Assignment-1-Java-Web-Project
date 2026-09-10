@@ -1,5 +1,7 @@
 package com.harry.stt;
 
+import java.io.IOException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +20,7 @@ public class TranscriptionController {
     }
     
     @PostMapping("/api/v1/transcribe")
-    public String transcribe(@RequestParam("file") MultipartFile audio) {
+    public String transcribe(@RequestParam("file") MultipartFile audio) throws IOException {
         return transcriptionService.transcribe(audio);
 
     }

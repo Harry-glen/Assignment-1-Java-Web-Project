@@ -1,6 +1,9 @@
 package com.harry.stt;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -20,10 +23,15 @@ public class TranscriptionService {
 	// URL comes from config (stt.api.url), this points at local stub
 	// during development and the real OpenAI endpoint on TITAN same code, both
 	
-	public String transcribe(MultipartFile audio) {
+	public String transcribe(MultipartFile audio) throws IOException {
 	    // build the multipart body: the audio file + the model field
 	    MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-	    body.add("file", audio.getResource());
+	    body.add("file", new ByteArrayResource(audio.getBytes()) {
+	        @Override
+	        public String getFilename() {
+	            return "audio.webm";   // gives OpenAI a filename+extension it recognises
+	        }
+	    });
 	    body.add("model", "gpt-4o-mini-transcribe");
 	    
 		RestClient restClient = RestClient.create();
