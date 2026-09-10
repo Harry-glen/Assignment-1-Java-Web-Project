@@ -5,11 +5,10 @@ let chunks = [];
 let isRecording = false;
 let stream;
 
-// grab the button from index
+// grab the buttons/transcript from index
 const recordButton = document.getElementById('record-btn');
-
-// grab the transcript element
 const transcriptEl = document.getElementById('transcript');
+const copyButton = document.getElementById('copy-btn');
 
 async function startRecording(){
 	try { 
@@ -49,6 +48,7 @@ async function startRecording(){
 				transcriptEl.classList.remove('error'); 
 				transcriptEl.classList.remove('placeholder');
 				transcriptEl.textContent = transcript;
+				copyButton.style.display = 'inline-block';
 				
 			// this catches the request never completing (no network, server unreachable),
 			// as opposed to the server replying with an error above	
@@ -64,7 +64,8 @@ async function startRecording(){
 		recordButton.classList.add('recording');
 		recordButton.textContent = 'Stop';
 		transcriptEl.textContent = 'Recording…';        
-		transcriptEl.classList.remove('error');          
+		transcriptEl.classList.remove('error'); 
+		copyButton.style.display = 'none';           
 	} catch (err) {
 		console.error('Microphone access failed:', err);
 	}
@@ -86,4 +87,10 @@ recordButton.addEventListener('click', () => {
   	} else {
     	startRecording();
   	}
+});
+
+copyButton.addEventListener('click', async () => {
+    await navigator.clipboard.writeText(transcriptEl.textContent);
+    copyButton.textContent = 'Copied!';
+    setTimeout(() => { copyButton.textContent = 'Copy'; }, 1500);
 });

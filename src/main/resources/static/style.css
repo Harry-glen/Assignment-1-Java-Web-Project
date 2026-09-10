@@ -48,3 +48,5 @@ body {
 	color: #f85149;
 	border-color: #f85149;
 }
+
+#copy-btn { display: none; }
