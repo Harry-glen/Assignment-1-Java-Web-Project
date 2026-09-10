@@ -43,3 +43,8 @@ body {
     font-style: italic;
     color: var(--muted);
 }
+
+#transcript.error {
+	color: #f85149;
+	border-color: #f85149;
+}
