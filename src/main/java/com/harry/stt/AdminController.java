@@ -2,6 +2,7 @@ package com.harry.stt;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.ResponseEntity;
@@ -40,9 +41,22 @@ public class AdminController {
     	return new GlobalStatsResponse(tokenStats.getInputTokens(), tokenStats.getOutputTokens());
     }
     
+    private final AtomicBoolean shuttingDown = new AtomicBoolean(false);
+    
     @PostMapping("/api/v1/admin/shutdown")
-    public ResponseEntity<ShutdownResponse> shutdown() {
-        // shutdown runs on a separate thread so this 202 can be sent before the server stops —
+    public ResponseEntity<?> shutdown() { 
+        // compareAndSet(false, true): atomically flips the flag ONLY if it was still false.
+        // Returns true for the first caller (who now owns the shutdown), false for any later caller.
+        if (!shuttingDown.compareAndSet(false, true)) {
+            // someone already triggered shutdown — reject this one with 409
+            ErrorResponse error = new ErrorResponse(
+                Instant.now().toString(), 409, "Conflict",
+                "Graceful shutdown is already in progress.", "/api/v1/admin/shutdown");
+            return ResponseEntity.status(409).body(error);
+        }
+
+    	
+        // shutdown runs on a separate thread so this 202 can be sent before the server stops,
         // closing the context immediately would kill the server before the response is flushed
         new Thread(() -> {
             try {
