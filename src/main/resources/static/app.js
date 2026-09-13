@@ -68,6 +68,9 @@ async function startRecording(){
 		copyButton.style.display = 'none';           
 	} catch (err) {
 		console.error('Microphone access failed:', err);
+		transcriptEl.classList.remove('placeholder');
+		transcriptEl.classList.add('error');
+		transcriptEl.textContent = 'Could not access the microphone. Please check permissions and try again.';
 	}
 }
 
