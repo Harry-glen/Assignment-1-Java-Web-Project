@@ -12,7 +12,8 @@ import org.springframework.web.client.RestClientException;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-// Ensures every unhandled failure across the API
+//Ensures every unhandled failure, from the STT call or anywhere else in the API,
+//comes back as the ErrorResponse shape the YAML spec defines, instead of a generic Spring error page.
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

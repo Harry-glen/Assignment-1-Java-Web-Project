@@ -29,37 +29,35 @@ public class TranscriptionService {
         this.tokenStats = tokenStats;
         this.restClient = restClientBuilder.build();
     }
-	
-	// Send audio to configured STT service and return response
-	// URL comes from config (stt.api.url), this points at local stub
-	// during development and the real OpenAI endpoint on TITAN same code, both
-	
-	public String transcribe(MultipartFile audio) throws IOException {
-	    // build the multipart body: the audio file + the model field
-	    MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-	    
-	    body.add("file", new ByteArrayResource(audio.getBytes()) {
-	        @Override
-	        public String getFilename() {
-	            return "audio.webm";   // gives OpenAI a filename+extension it recognises
-	        }
-	    });
-	    
-	    body.add("model", "gpt-4o-mini-transcribe");
-	    
-		TranscriptionResponse response = restClient.post()
-				.uri(sttApiUrl)
-				.header("Authorization", "Bearer " + sttApiKey)
-				.contentType(MediaType.MULTIPART_FORM_DATA)
-				.body(body)
-				.retrieve()
-				.body(TranscriptionResponse.class);
 
-		if (response.usage() != null) {
-			tokenStats.addUsage(response.usage().inputTokens(), response.usage().outputTokens());
-		}
-		
-		return response.text();
-	}
+    // Sends audio to the STT service at stt.api.url: the local stub during dev,
+    // or the real OpenAI endpoint on TITAN. Same code both ways, only config differs.
+    public String transcribe(MultipartFile audio) throws IOException {
+        // build the multipart body: the audio file + the model field
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+
+        body.add("file", new ByteArrayResource(audio.getBytes()) {
+            @Override
+            public String getFilename() {
+                return "audio.webm";   // gives OpenAI a filename+extension it recognises
+            }
+        });
+
+        body.add("model", "gpt-4o-mini-transcribe");
+
+        TranscriptionResponse response = restClient.post()
+                .uri(sttApiUrl)
+                .header("Authorization", "Bearer " + sttApiKey)
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(body)
+                .retrieve()
+                .body(TranscriptionResponse.class);
+
+        if (response.usage() != null) {
+            tokenStats.addUsage(response.usage().inputTokens(), response.usage().outputTokens());
+        }
+
+        return response.text();
+    }
 }
 
