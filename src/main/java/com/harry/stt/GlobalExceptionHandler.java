@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.RestClientException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -24,6 +25,12 @@ public class GlobalExceptionHandler {
         log.error("Upstream STT API call failed", ex);
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR,
                 "The speech-to-text service is currently unavailable.", request);
+    }
+
+    // Unknown URLs (e.g. a browser asking for /favicon.ico) are the caller's mistake, not a server error.
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFound(NoResourceFoundException ex, HttpServletRequest request) {
+        return buildResponse(HttpStatus.NOT_FOUND, "No such endpoint.", request);
     }
 
     @ExceptionHandler(Exception.class)

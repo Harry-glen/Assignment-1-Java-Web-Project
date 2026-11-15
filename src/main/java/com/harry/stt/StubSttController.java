@@ -14,7 +14,7 @@ public class StubSttController {
         return Map.of("text", "this is a fake transcription");
     }
 
-        // Stands in for OpenAI's whisper-1 verbose_json reply during local development.
+    // Stands in for OpenAI's whisper-1 verbose_json reply during local development.
     // One good segment and one junk segment (silence/noise), so the filter can be seen working.
     @PostMapping("/stub/audio/transcriptions")
     public WhisperResponse fakeWhisper() {
