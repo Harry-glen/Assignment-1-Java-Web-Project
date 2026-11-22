@@ -62,6 +62,8 @@ public class SubtitleService {
         byte[] bytes = audio.getBytes();
         String key = hash(bytes);
 
+        // putIfAbsent checks and claims the key in one atomic step. With containsKey then put, two threads could
+        // both see "absent" and both call Whisper for the same audio.
         CompletableFuture<SubtitleResponse> mine = new CompletableFuture<>();
         CompletableFuture<SubtitleResponse> existing = cache.putIfAbsent(key, mine);   // atomic: only one caller wins
         if (existing != null) {
@@ -127,6 +129,7 @@ public class SubtitleService {
         // Whisper sometimes invents text for silence or background noise. The
         // assignment says to drop a segment when it is probably not speech AND the
         // model is not confident in its own text, so both conditions must hold.
+        // With OR, real speech that was quiet or hard to hear was being dropped, so it has to be AND.
         List<SubtitleSegment> segments = new ArrayList<>();
         if (response.segments() != null) {
             for (WhisperResponse.Segment s : response.segments()) {
